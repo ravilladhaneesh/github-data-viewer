@@ -76,7 +76,7 @@ async function build(){
                 <h3>${repo.repo_name}</h3>
                 <p><strong>Username:</strong> ${repo.username}</p>
                 <p><strong>Branch:</strong> ${repo.branch}</p>
-                <p><strong>Languages Used:</strong></p>
+                <p><strong>Languages:</strong></p>
                 <div class="progress-bar-container">
                     ${progressBarContent}
                 </div>
