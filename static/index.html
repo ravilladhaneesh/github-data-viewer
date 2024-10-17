@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewer</title>
+    <style>
+        /* Basic styling */
+        .card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        #card-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .card a {
+            text-decoration: none;
+            color: blue;
+            margin-top: 10px;
+            display: inline-block;
+        }
+    
+        /* Progress bar container */
+        .progress-bar-container {
+            display: flex;
+            height: 10px; /* Reduced height for thinner progress bar */
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+    
+        /* Individual segments of the stacked progress bar */
+        .progress-bar-segment {
+            height: 100%;
+        }
+    
+        /* Language list container */
+        .language-list-container {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+    
+        /* Language list items with inline bullet points */
+        .language-list-container li {
+            float: left;
+            margin-right: 15px;
+            list-style-type: disc;
+            list-style-position: inside;
+        }
+    
+        /* Color for the language name */
+        .language-name {
+            font-weight: bold;
+        }
+    
+        /* Color for the percentage */
+        .language-percentage {
+            color: black;
+        }
+    
+        /* Clear floats after the list */
+        .language-list-container::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+    
+    
+    
+    
+    
+</head>
+<body>
+    <script type="text/javascript" src="./buildHTML.js"></script>
+    <script>build();</script>
+    <div id="card-container"></div>
+    <div>
+        <ul>
+            <li>dhaneesh</li>
+            <li>ravilla</li>
+        </ul>
+    </div>
+</body>
+</html>
