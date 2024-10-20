@@ -153,6 +153,15 @@ function getData(){
                 }  ,
                 'branch': 'feature1',
                 'repo_name': 'workflow-test'
+              },
+              {
+                'username': 'ravilladhaneesh',
+                'repo_url': 'https://github.com/ravilladhaneesh/AI-ML',
+                'languages': {
+                  'ipynb': 32
+                },
+                'branch': 'main',
+                'repo_name': 'AI-ML'
               }
         ];
     return data;
