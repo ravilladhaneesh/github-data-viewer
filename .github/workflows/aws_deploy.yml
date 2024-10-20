@@ -4,9 +4,11 @@ on:
   push:
     branches: 
       - main # Run the workflow when code is pushed to the main branch
+      - master
   pull_request:
     branches: 
       - main # Run the workflow on pull requests to the main branch
+      - master
 
 env:
   AWS_REGION : "ap-south-1" #Change to reflect your Region
