@@ -17,6 +17,8 @@ runs:
     - name: Request OIDC Token and Assume Role
       run: |
         echo "Requesting OIDC token..."
+        echo ${{ inputs.role_arn }}
+        echo $ {{ inputs.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
         TEMP_ROLE=$(aws sts assume-role-with-web-identity --role-arn ${{ inputs.role_arn }} \
           --role-session-name GitHubActionsSession \
           --web-identity-token ${{ inputs.ACTIONS_ID_TOKEN_REQUEST_TOKEN }} \
