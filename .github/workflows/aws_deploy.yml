@@ -67,12 +67,12 @@ jobs:
           aws_region: ap-south-1
 
       - name: Terraform Init
-        run: terraform -chdir=terraform/ init
+        run: terraform -chdir=github-viewer/terraform/ init
       - name: Upload Terraform State
         uses: actions/upload-artifacts@v3
         with:
           name: terraform-state
-          path: terraform/.terraform
+          path: github-viewer/terraform/.terraform
 
   # Job to run `terraform plan`
   plan:
@@ -103,7 +103,7 @@ jobs:
           aws_region: ap-south-1
 
       - name: Terraform Plan
-        run: terraform -chdir=terraform/ plan -out=tfplan
+        run: terraform -chdir=github-viewer/terraform/ plan -out=tfplan
 
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v3
@@ -140,4 +140,4 @@ jobs:
           aws_region: ap-south-1
 
       - name: Terraform Apply
-        run: terraform -chdir=terraform/ apply -auto-approve tfplan
+        run: terraform -chdir=github-viewer/terraform/ apply -auto-approve tfplan
