@@ -1,0 +1,28 @@
+name: "Setup AWS Credentials with OIDC"
+description: "Assume an AWS role using OIDC and configure AWS credentials"
+inputs:
+  role_arn:
+    description: "The ARN of the role to assume"
+    required: true
+  aws_region:
+    description: "AWS region"
+    required: false
+    default: "ap-south-1"
+runs:
+  using: "composite"
+  steps:
+    - name: Request OIDC Token and Assume Role
+      run: |
+        echo "Requesting OIDC token..."
+        TEMP_ROLE=$(aws sts assume-role-with-web-identity --role-arn ${{ inputs.role_arn }} \
+          --role-session-name GitHubActionsSession \
+          --web-identity-token ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }} \
+          --duration-seconds 3600 \
+          --output json)
+        export AWS_ACCESS_KEY_ID=$(echo $TEMP_ROLE | jq -r .Credentials.AccessKeyId)
+        export AWS_SECRET_ACCESS_KEY=$(echo $TEMP_ROLE | jq -r .Credentials.SecretAccessKey)
+        export AWS_SESSION_TOKEN=$(echo $TEMP_ROLE | jq -r .Credentials.SessionToken)
+        echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $GITHUB_ENV
+        echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_ENV
+        echo "AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}" >> $GITHUB_ENV
+      shell: bash
