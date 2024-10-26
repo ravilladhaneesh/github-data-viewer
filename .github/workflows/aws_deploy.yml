@@ -65,9 +65,9 @@ jobs:
       - name: Setup AWS Credentials using OIDC
         uses: ./.github/actions/setup-aws-oidc
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           role_arn: ${{ secrets.ROLE_ARN }}
           aws_region: ap-south-1
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
       - name: Terraform Init
         run: terraform -chdir=github-viewer/terraform/ init
       - name: Upload Terraform State
@@ -103,6 +103,7 @@ jobs:
         with:
           role_arn: ${{ secrets.ROLE_ARN }}
           aws_region: ap-south-1
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
 
       - name: Terraform Plan
         run: terraform -chdir=github-viewer/terraform/ plan -out=tfplan
@@ -140,6 +141,7 @@ jobs:
         with:
           role_arn: ${{ secrets.ROLE_ARN }}
           aws_region: ap-south-1
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
 
       - name: Terraform Apply
         run: terraform -chdir=github-viewer/terraform/ apply -auto-approve tfplan
