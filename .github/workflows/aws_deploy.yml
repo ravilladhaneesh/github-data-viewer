@@ -61,7 +61,7 @@ jobs:
           terraform_version: 1.9.8
 
       - name: Setup AWS Credentials using OIDC
-        uses: ./actions/setup-aws-oidc/action.yml
+        uses: ./.github/actions/setup-aws-oidc
         with:
           role_arn: ${{ secrets.ROLE_ARN }}
           aws_region: ap-south-1
