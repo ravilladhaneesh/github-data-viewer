@@ -1,28 +1,80 @@
-name: "Setup AWS Credentials with OIDC"
-description: "Assume an AWS role using OIDC and configure AWS credentials"
+# name: "Setup AWS Credentials with OIDC"
+# description: "Assume an AWS role using OIDC and configure AWS credentials"
+# inputs:
+#   role_arn:
+#     description: "The ARN of the role to assume"
+#     required: true
+#   aws_region:
+#     description: "AWS region"
+#     required: false
+#     default: "ap-south-1"
+# runs:
+#   using: "composite"
+#   steps:
+#     - name: Request OIDC Token and Assume Role
+#       run: |
+#         echo "Requesting OIDC token..."
+#         TEMP_ROLE=$(aws sts assume-role-with-web-identity --role-arn ${{ inputs.role_arn }} \
+#           --role-session-name GitHubActionsSession \
+#           --web-identity-token ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }} \
+#           --duration-seconds 3600 \
+#           --output json)
+#         export AWS_ACCESS_KEY_ID=$(echo $TEMP_ROLE | jq -r .Credentials.AccessKeyId)
+#         export AWS_SECRET_ACCESS_KEY=$(echo $TEMP_ROLE | jq -r .Credentials.SecretAccessKey)
+#         export AWS_SESSION_TOKEN=$(echo $TEMP_ROLE | jq -r .Credentials.SessionToken)
+#         echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $GITHUB_ENV
+#         echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_ENV
+#         echo "AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}" >> $GITHUB_ENV
+#       shell: bash
+
+
+name: 'Setup AWS OIDC Credentials'
+description: 'Sets up AWS credentials using OIDC'
 inputs:
   role_arn:
-    description: "The ARN of the role to assume"
+    description: 'The ARN of the IAM role to assume'
     required: true
   aws_region:
-    description: "AWS region"
+    description: 'The AWS region to deploy resources to'
     required: false
-    default: "ap-south-1"
+    default: 'ap-south-1'
+outputs:
+  id_token:
+    description: 'The ID token for AWS OIDC authentication'
+
 runs:
-  using: "composite"
+  using: 'node12'  # or 'docker' if you are using Docker for your action
   steps:
-    - name: Request OIDC Token and Assume Role
+    - name: Configure AWS OIDC
       run: |
-        echo "Requesting OIDC token..."
-        TEMP_ROLE=$(aws sts assume-role-with-web-identity --role-arn ${{ inputs.role_arn }} \
-          --role-session-name GitHubActionsSession \
-          --web-identity-token ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }} \
-          --duration-seconds 3600 \
-          --output json)
-        export AWS_ACCESS_KEY_ID=$(echo $TEMP_ROLE | jq -r .Credentials.AccessKeyId)
-        export AWS_SECRET_ACCESS_KEY=$(echo $TEMP_ROLE | jq -r .Credentials.SecretAccessKey)
-        export AWS_SESSION_TOKEN=$(echo $TEMP_ROLE | jq -r .Credentials.SessionToken)
-        echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $GITHUB_ENV
-        echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_ENV
-        echo "AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}" >> $GITHUB_ENV
-      shell: bash
+        # Fetch OIDC token
+        TOKEN=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -X POST "https://api.github.com/repos/${{ github.repository }}/actions/runners/registration-token" \
+          | jq -r .token)
+
+        # Export the token and configure AWS
+        export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
+        export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
+
+        # Assuming the IAM role using the OIDC token
+        ROLE_SESSION_NAME="GitHubActionsSession"
+        ROLE_ARN="${{ inputs.role_arn }}"
+
+        # Use AWS CLI to assume the role with OIDC
+        aws sts assume-role-with-web-identity \
+          --role-arn "$ROLE_ARN" \
+          --role-session-name "$ROLE_SESSION_NAME" \
+          --web-identity-token "$TOKEN" \
+          --region "${{ inputs.aws_region }}" > credentials.json
+
+        # Extract credentials from the JSON response
+        export AWS_ACCESS_KEY_ID=$(jq -r .Credentials.AccessKeyId < credentials.json)
+        export AWS_SECRET_ACCESS_KEY=$(jq -r .Credentials.SecretAccessKey < credentials.json)
+        export AWS_SESSION_TOKEN=$(jq -r .Credentials.SessionToken < credentials.json)
+
+        # Clean up
+        rm credentials.json
+
+    - name: Output ID Token
+      id: output
+      run: echo "::set-output name=id_token::$TOKEN"  # Set the ID token as output
