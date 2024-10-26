@@ -52,6 +52,9 @@ jobs:
   init:
     runs-on: ubuntu-latest
     environment: staging
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3
