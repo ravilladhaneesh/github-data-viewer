@@ -5,10 +5,12 @@ on:
     branches: 
       - main # Run the workflow when code is pushed to the main branch
       - master
+      - terraform
   pull_request:
     branches: 
       - main # Run the workflow on pull requests to the main branch
       - master
+      - terraform
 
 env:
   AWS_REGION : "ap-south-1" #Change to reflect your Region
@@ -19,16 +21,18 @@ permissions:
 jobs:
   AssumeRoleAndCallIdentity:
     runs-on: ubuntu-latest
+    environment: staging
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
-          role-to-assume: arn:aws:iam::011528266310:role/GitHubAction-AssumeRoleWithAction. #change to reflect your IAM role’s ARN
+          role-to-assume: ${{ secrets.ROLE_ARN }} #change to reflect your IAM role’s ARN
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
       # Hello from AWS: WhoAmI
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
+          aws s3 ls
