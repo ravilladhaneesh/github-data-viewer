@@ -59,17 +59,15 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.8
-
       - name: Setup AWS Credentials using OIDC
         uses: ./.github/actions/setup-aws-oidc
         with:
           role_arn: ${{ secrets.ROLE_ARN }}
           aws_region: ap-south-1
-
       - name: Terraform Init
         run: terraform -chdir=github-viewer/terraform/ init
       - name: Upload Terraform State
-        uses: actions/upload-artifacts@v3
+        uses: actions/upload-artifact@v3
         with:
           name: terraform-state
           path: github-viewer/terraform/.terraform
