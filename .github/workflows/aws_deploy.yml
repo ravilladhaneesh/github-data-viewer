@@ -50,24 +50,29 @@ jobs:
 
   # Job to run `terraform init`
   init:
+    
     runs-on: ubuntu-latest
     environment: staging
     permissions:
       id-token: write
       contents: read
     steps:
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN}}
+          aws-region: ap-south-1
       - name: Git clone the repository
         uses: actions/checkout@v3
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.8
-      - name: Setup AWS Credentials using OIDC
-        uses: ./.github/actions/setup-aws-oidc
-        with:
-          role_arn: ${{ secrets.ROLE_ARN }}
-          aws_region: ap-south-1
-          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+      # - name: Setup AWS Credentials using OIDC
+      #   uses:  ./.github/actions/setup-aws-oidc
+      #   with:
+      #     role_arn: ${{ secrets.ROLE_ARN }}
+      #     aws_region: ap-south-1
       - name: Terraform Init
         run: terraform -chdir=github-viewer/terraform/ init
       - name: Upload Terraform State
@@ -103,7 +108,6 @@ jobs:
         with:
           role_arn: ${{ secrets.ROLE_ARN }}
           aws_region: ap-south-1
-          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
 
       - name: Terraform Plan
         run: terraform -chdir=github-viewer/terraform/ plan -out=tfplan
@@ -141,7 +145,6 @@ jobs:
         with:
           role_arn: ${{ secrets.ROLE_ARN }}
           aws_region: ap-south-1
-          token: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
 
       - name: Terraform Apply
         run: terraform -chdir=github-viewer/terraform/ apply -auto-approve tfplan
