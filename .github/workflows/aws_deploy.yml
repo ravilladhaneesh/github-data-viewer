@@ -68,20 +68,15 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.8
-      # - name: Setup AWS Credentials using OIDC
-      #   uses:  ./.github/actions/setup-aws-oidc
-      #   with:
-      #     role_arn: ${{ secrets.ROLE_ARN }}
-      #     aws_region: ap-south-1
       - name: Terraform Init
         run: |
           ls -la
-          terraform -chdir=github-viewer/terraform/ init
+          terraform -chdir=terraform/ init
       - name: Upload Terraform State
         uses: actions/upload-artifact@v3
         with:
           name: terraform-state
-          path: github-viewer/terraform/.terraform
+          path: terraform/.terraform
 
   # Job to run `terraform plan`
   plan:
@@ -105,14 +100,14 @@ jobs:
         with:
           name: terraform-state
 
-      - name: Setup AWS credentials using OIDC
-        uses: ./.github/actions/setup-aws-oidc
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          role_arn: ${{ secrets.ROLE_ARN }}
-          aws_region: ap-south-1
+          role-to-assume: ${{ secrets.ROLE_ARN}}
+          aws-region: ap-south-1
 
       - name: Terraform Plan
-        run: terraform -chdir=github-viewer/terraform/ plan -out=tfplan
+        run: terraform -chdir=terraform/ plan -out=tfplan
 
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v3
@@ -142,11 +137,11 @@ jobs:
         with:
           name: terraform-plan
 
-      - name: Setup AWS credentials using OIDC
-        uses: ./.github/actions/setup-aws-oidc
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          role_arn: ${{ secrets.ROLE_ARN }}
-          aws_region: ap-south-1
+          role-to-assume: ${{ secrets.ROLE_ARN}}
+          aws-region: ap-south-1
 
       - name: Terraform Apply
-        run: terraform -chdir=github-viewer/terraform/ apply -auto-approve tfplan
+        run: terraform -chdir=terraform/ apply -auto-approve tfplan
