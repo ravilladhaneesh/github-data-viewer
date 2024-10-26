@@ -74,7 +74,9 @@ jobs:
       #     role_arn: ${{ secrets.ROLE_ARN }}
       #     aws_region: ap-south-1
       - name: Terraform Init
-        run: terraform -chdir=github-viewer/terraform/ init
+        run: |
+          ls -la
+          terraform -chdir=github-viewer/terraform/ init
       - name: Upload Terraform State
         uses: actions/upload-artifact@v3
         with:
