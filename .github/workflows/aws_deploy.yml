@@ -76,6 +76,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: terraform-state
+          run: |
+           ls -la
+           tree
           path: terraform/.terraform
 
   # Job to run `terraform plan`
