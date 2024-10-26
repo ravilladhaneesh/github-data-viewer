@@ -8,7 +8,7 @@ inputs:
     description: "AWS region"
     required: false
     default: "ap-south-1"
-  ACTIONS_ID_TOKEN_REQUEST_TOKEN:
+  token:
     description: "Access token"
     required: true
 runs:
@@ -18,10 +18,10 @@ runs:
       run: |
         echo "Requesting OIDC token..."
         echo ${{ inputs.role_arn }}
-        echo $ {{ inputs.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+        echo $ {{ inputs.token }}
         TEMP_ROLE=$(aws sts assume-role-with-web-identity --role-arn ${{ inputs.role_arn }} \
           --role-session-name GitHubActionsSession \
-          --web-identity-token ${{ inputs.ACTIONS_ID_TOKEN_REQUEST_TOKEN }} \
+          --web-identity-token ${{ inputs.token }} \
           --duration-seconds 3600 \
           --output json)
         export AWS_ACCESS_KEY_ID=$(echo $TEMP_ROLE | jq -r .Credentials.AccessKeyId)

@@ -141,7 +141,7 @@ jobs:
         with:
           role_arn: ${{ secrets.ROLE_ARN }}
           aws_region: ap-south-1
-          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          token: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
 
       - name: Terraform Apply
         run: terraform -chdir=github-viewer/terraform/ apply -auto-approve tfplan
