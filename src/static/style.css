@@ -19,13 +19,27 @@ transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s eas
 position: relative;
 }
 
-/* Professional color for card background */
+
+.card-header {
+    display: flex;
+}
+
+.card-repo-name {
+    flex: 7;
+}
+
+.card-repo-visibility {
+    flex: 3;
+    justify-items: center;
+}
+
+
 .card:nth-child(odd) {
 background-color: #ffffff;
 }
 
 .card:nth-child(even) {
-background-color: #f4f4f4;
+background-color: #f2f2f2;
 }
 
 /* Text Styling */
