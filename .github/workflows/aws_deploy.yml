@@ -54,7 +54,7 @@ jobs:
     environment: staging
     steps:
       - name: Git clone the repository
-        uses: actions/checkout@3
+        uses: actions/checkout@v3
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
