@@ -46,12 +46,12 @@ async function build(){
             // Create a single stacked progress bar
             let progressBarContent = '';
             let languageSpanContent = '';
-            Object.entries(repo.languages).forEach(([lang, count]) => {
+            Object.entries(repo.languages).forEach(([lang, percentage]) => {
                 // Check if the language has already been assigned a color, if not, generate a new color
                 if (!languageColors[lang]) {
                     languageColors[lang] = getRandomColor();
                 }
-                const percentage = ((count / totalFiles) * 100).toFixed(2); // Calculate percentage
+                //const percentage = ((count / totalFiles) * 100).toFixed(2); // Calculate percentage
                 const color = languageColors[lang]; // Use the dynamically assigned or new color
 
                 // Progress bar segment
@@ -71,11 +71,32 @@ async function build(){
                 `;
             });
 
+            const visibility = repo.is_private_repo ? "Private": "Public";
+            
+            // Determine the border color based on visibility
+            if (visibility === "Public") {
+                borderColor = "green";
+                linkContent = `<a href="${repo.repo_url}" target="_blank">View Repo</a>`;
+            } else {
+                borderColor = "red";
+                linkContent = `<a href="https://example.com/custom-link" target="_blank">View Custom Page</a>`;
+            }
+
             // Create card content
             card.innerHTML = `
-                <h3>${repo.repo_name}</h3>
+                <div class="card-header">
+                    <div class='card-repo-name'>
+                        <h3>${repo.repo_name}</h3>
+                    </div>
+                    <div class="card-repo-visibility">
+                        <p style="border: 1.5px solid ${borderColor}; border-radius: 10px; padding: 5px;">
+                            ${visibility}
+                        </p>
+                    </div>
+                </div>
                 <p><strong>Username:</strong> ${repo.username}</p>
                 <p><strong>Branch:</strong> ${repo.branch}</p>
+                <p><strong>Visibility:</strong> ${repo.is_private_repo ? "Private": "Public"} <p>
                 <p><strong>Languages:</strong></p>
                 <div class="progress-bar-container">
                     ${progressBarContent}
@@ -83,7 +104,7 @@ async function build(){
                 <ul class="language-list-container">
                     ${languageSpanContent}
                 </ul>
-                <a href="${repo.repo_url}" target="_blank">View Repo</a>
+                ${linkContent}
             `;
 
             // Append card to the container
@@ -126,42 +147,56 @@ function getData(){
               'username': 'ravilladhaneesh',
               'repo_url': 'https://github.com/ravilladhaneesh/ehr/tree/main',
               'languages': {
-                'py': 17,
-                'HTML': 15,
-                'css': 1
+                'py': 40,
+                'HTML': 45,
+                'css': 15
               }  ,
               'branch': 'main',
+              'is_private_repo': false,
               'repo_name': 'ehr'
             },
             {
                 'username': 'ravilladhaneesh',
                 'repo_url': 'https://github.com/ravilladhaneesh/OIBSIP/tree/main',
                 'languages': {
-                  'py': 5,
-                  'java': 2,
-                  'ipynb': 4
+                  'py': 50,
+                  'java': 20.5,
+                  'ipynb': 29.5
                 }  ,
                 'branch': 'main',
+                'is_private_repo': false,
                 'repo_name': 'OIBSIP'
               },
               {
                 'username': 'ravilladhaneesh',
                 'repo_url': 'https://github.com/ravilladhaneesh/workflow-test/tree/feature1',
                 'languages': {
-                  'py': 5,
-                  'ipynb': 4
+                  'py': 50.6,
+                  'ipynb': 49.4
                 }  ,
                 'branch': 'feature1',
+                'is_private_repo': false,
                 'repo_name': 'workflow-test'
               },
               {
                 'username': 'ravilladhaneesh',
                 'repo_url': 'https://github.com/ravilladhaneesh/AI-ML',
                 'languages': {
-                  'ipynb': 32
+                  'ipynb': 100
                 },
                 'branch': 'main',
+                'is_private_repo': false,
                 'repo_name': 'AI-ML'
+              },
+              {
+                'username': 'ravilladhaneesh',
+                'repo_url': 'https://github.com/ravilladhaneesh/4thProject',
+                'languages': {
+                  'python' : 100,
+                },
+                'branch': 'main',
+                'is_private_repo': true,
+                'repo_name': '4thProject'
               }
         ];
     return data;
