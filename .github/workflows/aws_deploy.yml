@@ -65,6 +65,7 @@ jobs:
       - name: Setup AWS Credentials using OIDC
         uses: ./.github/actions/setup-aws-oidc
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           role_arn: ${{ secrets.ROLE_ARN }}
           aws_region: ap-south-1
       - name: Terraform Init
