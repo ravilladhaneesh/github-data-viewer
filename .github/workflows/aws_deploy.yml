@@ -49,53 +49,54 @@ jobs:
   #        export AWS_SECRET_ACCESS_KEY=$(echo $TEMP_ROLE | jq -r .Credentials.SecretAccessKey)
   #        export AWS_SESSION_TOKEN=$(echo $TEMP_ROLE | jq -r .Credentials.SessionToken)
 
-  # Job to run `terraform init`
-  init:
+  # # Job to run `terraform init`
+  # init:
     
-    runs-on: ubuntu-latest
-    environment: staging
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.ROLE_ARN}}
-          aws-region: ap-south-1
-      - name: Git clone the repository
-        uses: actions/checkout@v3
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.9.8
+  #   runs-on: ubuntu-latest
+  #   environment: staging
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   steps:
+  #     - name: Configure aws credentials
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         role-to-assume: ${{ secrets.ROLE_ARN}}
+  #         aws-region: ap-south-1
+  #     - name: Git clone the repository
+  #       uses: actions/checkout@v3
+  #     - name: Set up Terraform
+  #       uses: hashicorp/setup-terraform@v2
+  #       with:
+  #         terraform_version: 1.9.8
 
-      - name: Configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.ROLE_ARN}}
-          aws-region: ap-south-1
+  #     - name: Configure aws credentials
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         role-to-assume: ${{ secrets.ROLE_ARN}}
+  #         aws-region: ap-south-1
 
-      - name: Terraform Init
-        run: |
-          ls -la
-          terraform -chdir=terraform/ init
-          ls -la 
-          tree -a
+  #     - name: Terraform Init
+  #       run: |
+  #         ls -la
+  #         terraform -chdir=terraform/ init
+  #         ls -la 
+  #         tree -a
 
-      # - name: Upload Terraform State
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: terraform-state
-      #     run: |
-      #      ls -la
-      #      tree
-      #     path: terraform/.terraform
+  #     # - name: Upload Terraform State
+  #     #   uses: actions/upload-artifact@v3
+  #     #   with:
+  #     #     name: terraform-state
+  #     #     run: |
+  #     #      ls -la
+  #     #      tree
+  #     #     path: terraform/.terraform
+
 
   # Job to run `terraform plan`
   plan:
     runs-on: ubuntu-latest
-    needs: init  # This job depends on the successful completion of `init`
+    #needs: init  # This job depends on the successful completion of `init`
     environment: staging
     permissions:
       id-token: write
@@ -161,7 +162,9 @@ jobs:
           aws-region: ap-south-1
 
       - name: Terraform Apply
-        run: terraform -chdir=terraform/ apply -auto-approve
+        run: |
+          terraform -chidr=terraform/ init
+          terraform -chdir=terraform/ apply -auto-approve
   
   # Job to run `terraform destory`
   destroy:
@@ -192,6 +195,6 @@ jobs:
           role-to-assume: ${{ secrets.ROLE_ARN}}
           aws-region: ap-south-1
 
-      - name: Terraform Apply
+      - name: Terraform destroy
         run: terraform -chdir=terraform/ destroy -auto-approve
   
