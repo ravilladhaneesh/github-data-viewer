@@ -72,6 +72,8 @@ jobs:
         run: |
           ls -la
           terraform -chdir=terraform/ init
+          ls -la 
+          tree
       - name: Upload Terraform State
         uses: actions/upload-artifact@v3
         with:
