@@ -1,10 +1,5 @@
-provider "aws" {
-    region = "ap-south-1"
-}
-
-
 resource "aws_s3_bucket" "tf-bucket" {
-  bucket = "tf-test-bucket-klialkljei"
+  bucket = "github-viewer"
 
   tags = {
     Name        = "terraform bucket"

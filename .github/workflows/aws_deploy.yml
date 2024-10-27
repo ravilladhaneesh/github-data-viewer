@@ -68,20 +68,28 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.8
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN}}
+          aws-region: ap-south-1
+
       - name: Terraform Init
         run: |
           ls -la
           terraform -chdir=terraform/ init
           ls -la 
           tree -a
-      - name: Upload Terraform State
-        uses: actions/upload-artifact@v3
-        with:
-          name: terraform-state
-          run: |
-           ls -la
-           tree
-          path: terraform/.terraform
+
+      # - name: Upload Terraform State
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: terraform-state
+      #     run: |
+      #      ls -la
+      #      tree
+      #     path: terraform/.terraform
 
   # Job to run `terraform plan`
   plan:
@@ -100,10 +108,10 @@ jobs:
         with:
           terraform_version: 1.9.8
 
-      - name: Download Terraform State
-        uses: actions/download-artifact@v3
-        with:
-          name: terraform-state
+      # - name: Download Terraform State
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: terraform-state
 
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -112,13 +120,13 @@ jobs:
           aws-region: ap-south-1
 
       - name: Terraform Plan
-        run: terraform -chdir=terraform/ plan -out=tfplan
+        run: terraform -chdir=terraform/ plan
 
-      - name: Upload Terraform Plan
-        uses: actions/upload-artifact@v3
-        with:
-          name: terraform-plan
-          path: tfplan
+      # - name: Upload Terraform Plan
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: terraform-plan
+      #     path: tfplan
 
   # Job to run `terraform apply`
   apply:
@@ -137,10 +145,10 @@ jobs:
         with:
           terraform_version: 1.9.8
 
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v3
-        with:
-          name: terraform-plan
+      # - name: Download Terraform Plan
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: terraform-plan
 
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -150,3 +158,35 @@ jobs:
 
       - name: Terraform Apply
         run: terraform -chdir=terraform/ apply -auto-approve tfplan
+  
+  # Job to run `terraform apply`
+  destroy:
+    runs-on: ubuntu-latest
+    needs: plan  # This job depends on the successful completion of `plan`
+    environment: staging
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.8
+
+      # - name: Download Terraform Plan
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: terraform-plan
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN}}
+          aws-region: ap-south-1
+
+      - name: Terraform Apply
+        run: terraform -chdir=terraform/ destroy -auto-approve
+  
