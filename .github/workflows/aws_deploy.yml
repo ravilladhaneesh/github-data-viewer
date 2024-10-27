@@ -120,7 +120,9 @@ jobs:
           aws-region: ap-south-1
 
       - name: Terraform Plan
-        run: terraform -chdir=terraform/ plan
+        run: |
+          terraform -chdir=terraform init
+          terraform -chdir=terraform/ plan
 
       # - name: Upload Terraform Plan
       #   uses: actions/upload-artifact@v3
