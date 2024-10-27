@@ -196,5 +196,7 @@ jobs:
           aws-region: ap-south-1
 
       - name: Terraform destroy
-        run: terraform -chdir=terraform/ destroy -auto-approve
+        run: |
+          terraform -chdir=terraform/ init
+          terraform -chdir=terraform/ destroy -auto-approve
   
