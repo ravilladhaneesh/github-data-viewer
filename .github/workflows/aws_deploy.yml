@@ -4,14 +4,14 @@ on:
   push:
     branches: 
       - '**'
-      #- main # Run the workflow when code is pushed to the main branch
-      #- master
+      #- master # Run the workflow when code is pushed to the main branch
       #- terraform
   pull_request:
     branches: 
-      - main # Run the workflow on pull requests to the main branch
       - master
-  workflow_dispatch:
+      - terraform
+      
+  # workflow_dispatch:
 
 env:
   AWS_REGION : "ap-south-1" #Change to reflect your Region
