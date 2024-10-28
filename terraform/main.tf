@@ -12,11 +12,19 @@ resource "aws_s3_bucket" "tf-github-viewer-bucket" {
 
 # 2. Add policy to the bucket to make it public
 
+resource "aws_s3_bucket_public_access_block" "tf-github-viewer-bucket-public-access" {
+  bucket = aws_s3_bucket.tf-github-viewer-bucket.id
+
+  block_public_acls   = false
+  block_public_policy = false
+}
+
+# #uncomment to enable public access
 # data "aws_iam_policy_document" "public-access-policy"{
 #   statement {
 #     principals {
-#       type = "AWS"
-#       identifiers = "*"
+#       type = "*"
+#       identifiers = ["*"]
 #     }
 
 #     actions = [
@@ -34,19 +42,13 @@ resource "aws_s3_bucket" "tf-github-viewer-bucket" {
 
 # resource "aws_s3_bucket_policy" "s3-public-access-policy" {
 #   bucket = aws_s3_bucket.tf-github-viewer-bucket.id
-#   policy = data.aws_iam_policy_document.public-access-policy
+#   policy = data.aws_iam_policy_document.public-access-policy.json
+#   depends_on = [ aws_s3_bucket_public_access_block.tf-github-viewer-bucket-public-access ]
 # }
 
 
-resource "aws_s3_bucket_public_access_block" "tf-github-viewer-bucket-public-access" {
-  bucket = aws_s3_bucket.tf-github-viewer-bucket.id
-
-  block_public_acls   = false
-  block_public_policy = false
-}
-
-
 # 3. Upload index.html, buildHTML.js, style.css files to the bucket
+
 resource "aws_s3_object" "github-viewer-index" {
   bucket       = aws_s3_bucket.tf-github-viewer-bucket.bucket
   key          = "index.html"
@@ -74,6 +76,7 @@ resource "aws_s3_object" "github-viewer-style-css" {
 
 
 # 4. Configure the bucket for static website hosting
+
 resource "aws_s3_bucket_website_configuration" "terraform-s3-static-website-config" {
   bucket = aws_s3_bucket.tf-github-viewer-bucket.id
 
