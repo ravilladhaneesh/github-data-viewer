@@ -3,14 +3,15 @@ name: Connect to an AWS role from a GitHub repository
 on:
   push:
     branches: 
-      - main # Run the workflow when code is pushed to the main branch
-      - master
-      - terraform
+      - '**'
+      #- master # Run the workflow when code is pushed to the main branch
+      #- terraform
   pull_request:
     branches: 
-      - main # Run the workflow on pull requests to the main branch
       - master
       - terraform
+      
+  # workflow_dispatch:
 
 env:
   AWS_REGION : "ap-south-1" #Change to reflect your Region
@@ -19,20 +20,183 @@ permissions:
       id-token: write   # This is required for requesting the JWT
       contents: read    # This is required for actions/checkout
 jobs:
-  AssumeRoleAndCallIdentity:
+  #AssumeRoleAndCallIdentity:
+  #  runs-on: ubuntu-latest
+  #  environment: staging
+  #  steps:
+  #    - name: Git clone the repository
+  #      uses: actions/checkout@v3
+  #    - name: Set up Terraform
+  #      uses: hashicorp/setup-terraform@v2
+  #      with:
+  #        terraform_version: 1.5.0
+
+  #    - name: Configure AWS Credentials for OIDC
+  #      env:
+  #        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  #        ROLE_ARN: ${{ secrets.ROLE_ARN }}
+  #      run: |
+  #        export AWS_REGION=us-west-2
+
+  #        # Use AWS CLI to get temporary credentials via OIDC
+  #        TEMP_ROLE=$(aws sts assume-role-with-web-identity --role-arn $ROLE_ARN \
+  #          --role-session-name GitHubActionsSession \
+  #          --web-identity-token ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }} \
+  #          --duration-seconds 3600 \
+  #          --output json)
+
+  #        export AWS_ACCESS_KEY_ID=$(echo $TEMP_ROLE | jq -r .Credentials.AccessKeyId)
+  #        export AWS_SECRET_ACCESS_KEY=$(echo $TEMP_ROLE | jq -r .Credentials.SecretAccessKey)
+  #        export AWS_SESSION_TOKEN=$(echo $TEMP_ROLE | jq -r .Credentials.SessionToken)
+
+  # # Job to run `terraform init`
+  # init:
+    
+  #   runs-on: ubuntu-latest
+  #   environment: staging
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   steps:
+  #     - name: Configure aws credentials
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         role-to-assume: ${{ secrets.ROLE_ARN}}
+  #         aws-region: ap-south-1
+  #     - name: Git clone the repository
+  #       uses: actions/checkout@v3
+  #     - name: Set up Terraform
+  #       uses: hashicorp/setup-terraform@v2
+  #       with:
+  #         terraform_version: 1.9.8
+
+  #     - name: Configure aws credentials
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         role-to-assume: ${{ secrets.ROLE_ARN}}
+  #         aws-region: ap-south-1
+
+  #     - name: Terraform Init
+  #       run: |
+  #         ls -la
+  #         terraform -chdir=terraform/ init
+  #         ls -la 
+  #         tree -a
+
+  #     # - name: Upload Terraform State
+  #     #   uses: actions/upload-artifact@v3
+  #     #   with:
+  #     #     name: terraform-state
+  #     #     run: |
+  #     #      ls -la
+  #     #      tree
+  #     #     path: terraform/.terraform
+
+
+  # Job to run `terraform plan`
+  plan:
     runs-on: ubuntu-latest
+    #needs: init  # This job depends on the successful completion of `init`
     environment: staging
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - name: Git clone the repository
-        uses: actions/checkout@v3
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1.7.0
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
         with:
-          role-to-assume: ${{ secrets.ROLE_ARN }} #change to reflect your IAM role’s ARN
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: ${{ env.AWS_REGION }}
-      # Hello from AWS: WhoAmI
-      - name: Sts GetCallerIdentity
+          terraform_version: 1.9.8
+
+      # - name: Download Terraform State
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: terraform-state
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN}}
+          aws-region: ap-south-1
+
+      - name: Terraform Plan
         run: |
-          aws sts get-caller-identity
-          aws s3 ls
+          terraform -chdir=terraform init
+          terraform -chdir=terraform/ plan
+
+      # - name: Upload Terraform Plan
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: terraform-plan
+      #     path: tfplan
+
+  # Job to run `terraform apply`
+  apply:
+    runs-on: ubuntu-latest
+    needs: plan  # This job depends on the successful completion of `plan`
+    environment: staging
+    # if: github.event_name == 'workflow_dispatch' && github.event.action == 'apply'
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.8
+
+      # - name: Download Terraform Plan
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: terraform-plan
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN}}
+          aws-region: ap-south-1
+
+      - name: Terraform Apply
+        run: |
+          terraform -chdir=terraform/ init
+          terraform -chdir=terraform/ apply -auto-approve
+  
+  # Job to run `terraform destory`
+  destroy:
+    runs-on: ubuntu-latest
+    needs: apply  # This job depends on the successful completion of `apply`
+    environment: staging
+    # if: github.event_name == 'workflow_dispatch' && github.event.action == 'destroy'
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.8
+
+      # - name: Download Terraform Plan
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: terraform-plan
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN}}
+          aws-region: ap-south-1
+
+      - name: Terraform destroy
+        run: |
+          terraform -chdir=terraform/ init
+          terraform -chdir=terraform/ destroy -auto-approve
+  
