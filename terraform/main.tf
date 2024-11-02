@@ -10,14 +10,17 @@ resource "aws_s3_bucket" "tf-github-viewer-bucket" {
   }
 }
 
-# 2. Add policy to the bucket to make it public
+# 2. Bucket access
 
-resource "aws_s3_bucket_public_access_block" "tf-github-viewer-bucket-public-access" {
-  bucket = aws_s3_bucket.tf-github-viewer-bucket.id
+# #2.1 Add policy to the bucket to make it public
 
-  block_public_acls   = false
-  block_public_policy = false
-}
+# resource "aws_s3_bucket_public_access_block" "tf-github-viewer-bucket-public-access" {
+#   bucket = aws_s3_bucket.tf-github-viewer-bucket.id
+
+#   block_public_acls   = false
+#   block_public_policy = false
+#   block_
+# }
 
 # #uncomment to enable public access
 # data "aws_iam_policy_document" "public-access-policy"{
@@ -44,6 +47,21 @@ resource "aws_s3_bucket_public_access_block" "tf-github-viewer-bucket-public-acc
 #   bucket = aws_s3_bucket.tf-github-viewer-bucket.id
 #   policy = data.aws_iam_policy_document.public-access-policy.json
 #   depends_on = [ aws_s3_bucket_public_access_block.tf-github-viewer-bucket-public-access ]
+# }
+
+#2.2 Make the s3 bucket private
+
+# resource "aws_s3_bucket_public_access_block" "github-viewer-block-public-access" {
+#   bucket = aws_s3_bucket.tf-github-viewer-bucket.id
+
+#   block_public_acls   = true
+#   block_public_policy = true
+# }
+
+
+# resource "aws_s3_bucket_acl" "s3-acl" {
+#   bucket = aws_s3_bucket.tf-github-viewer-bucket.id
+#   acl    = "private"
 # }
 
 
@@ -77,11 +95,11 @@ resource "aws_s3_object" "github-viewer-style-css" {
 
 # 4. Configure the bucket for static website hosting
 
-resource "aws_s3_bucket_website_configuration" "terraform-s3-static-website-config" {
-  bucket = aws_s3_bucket.tf-github-viewer-bucket.id
+# resource "aws_s3_bucket_website_configuration" "terraform-s3-static-website-config" {
+#   bucket = aws_s3_bucket.tf-github-viewer-bucket.id
 
-  index_document {
-    suffix = "index.html"
-  }
+#   index_document {
+#     suffix = "index.html"
+#   }
 
-}
+# }
