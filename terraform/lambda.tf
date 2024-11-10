@@ -16,6 +16,7 @@ resource "aws_lambda_function" "test_lambda" {
   source_code_hash = data.archive_file.lambda-invalidator-source.output_base64sha256
 
   runtime = "python3.12"
+  timeout = 10
 
   environment {
     variables = {

@@ -45,25 +45,15 @@ resource "aws_iam_role" "iam_for_lambda" {
   EOF
 }
 
-resource "aws_iam_policy_attachment" "lambda-s3-trigger-policy-attachment" {
-  name = "lambda-s3-trigger-policy"
+resource "aws_iam_role_policy_attachment" "lambda-s3-trigger-policy-attachment" {
 
-  roles      = ["${aws_iam_role.iam_for_lambda.name}"]
+  role      = aws_iam_role.iam_for_lambda.name
   policy_arn = aws_iam_policy.lambda-s3-trigger.arn
 }
 
 
-resource "aws_iam_policy_attachment" "cloudWatch-attachment" {
-  name = "lambda-s3-trigger-policy-cloudwatch"
+resource "aws_iam_role_policy_attachment" "cloudFront-attachment" {
 
-  roles      = ["${aws_iam_role.iam_for_lambda.name}"]
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
-}
-
-
-resource "aws_iam_policy_attachment" "cloudFront-attachment" {
-  name = "lambda-s3-trigger-policy-cloudwatch"
-
-  roles      = ["${aws_iam_role.iam_for_lambda.name}"]
+  role      = aws_iam_role.iam_for_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
 }

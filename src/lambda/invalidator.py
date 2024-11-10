@@ -1,5 +1,5 @@
 import json
-#import boto3
+import boto3
 import datetime
 # import requests
 import os
@@ -22,17 +22,17 @@ def lambda_handler(event, context):
                 'CallerReference': str(now_ts)
         }
     try:
-        #s3 = boto3.client('s3', region_name='ap-south-1')
-        #print(s3)
+        s3 = boto3.client('s3', region_name='ap-south-1')
+        print(s3)
 
         
 
-        #client = boto3.client('cloudfront')
-        # response = client.create_invalidation(
-        #     DistributionId=distributionId,
-        #     InvalidationBatch=invalidatorBatchParam,
-        # )
-        # print(response)
+        client = boto3.client('cloudfront')
+        response = client.create_invalidation(
+            DistributionId=distributionId,
+            InvalidationBatch=invalidatorBatchParam,
+        )
+        print(response)
         
         return {
             "statusCode": 200,
