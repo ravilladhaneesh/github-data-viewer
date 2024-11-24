@@ -9,6 +9,22 @@
 </head>
 <body>
     <script type="text/javascript" src="buildHTML.js"></script>
+    <script>buildHeader();</script>
+    <div id="header" ></div>
+
+
+
+    <!-- Dropdown for available users -->
+    <div id="user-selection-container">
+        <label for="user-select">Select a User:</label>
+        <select id="user-select">
+            <option value="">-- Select a User --</option>
+        </select>
+        <button id="fetch-repos-button">Fetch Repositories</button>
+    </div>
+
+
+
     <script>build();</script>
     <div id="card-container"></div>
     <div>
@@ -17,5 +33,6 @@
             <li>ravilla</li>
         </ul>
     </div>
+    <div id="footer"></div>
 </body>
 </html>
