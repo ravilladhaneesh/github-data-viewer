@@ -47,13 +47,13 @@ resource "aws_iam_role" "iam_for_lambda" {
 
 resource "aws_iam_role_policy_attachment" "lambda-s3-trigger-policy-attachment" {
 
-  role      = aws_iam_role.iam_for_lambda.name
+  role       = aws_iam_role.iam_for_lambda.name
   policy_arn = aws_iam_policy.lambda-s3-trigger.arn
 }
 
 
 resource "aws_iam_role_policy_attachment" "cloudFront-attachment" {
 
-  role      = aws_iam_role.iam_for_lambda.name
+  role       = aws_iam_role.iam_for_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
 }
