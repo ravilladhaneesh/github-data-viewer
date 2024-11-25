@@ -1,7 +1,8 @@
 async function build() {
     document.addEventListener("DOMContentLoaded", async function () {
         // Fetch users and populate the dropdown
-        await fetchUsers();
+        // await fetchUsers();
+        localFetchUsers();
 
         const fetchReposButton = document.getElementById('fetch-repos-button');
         fetchReposButton.addEventListener('click', async function () {
@@ -15,7 +16,8 @@ async function build() {
             }
 
             // Fetch and display repositories
-            const data = await getData(username);
+            // const data = await getData(username);
+            const data = localgetData(username);
             if (data.length === 0) {
                 alert("No repositories found or an error occurred while fetching repositories.");
                 return;
@@ -153,3 +155,110 @@ async function getData(username) {
     }
 }
 
+
+
+function localFetchUsers(){
+
+
+    const users = ["ravilladhaneesh", "gopi"]
+    // Populate the dropdown with the fetched users
+    const userSelect = document.getElementById('user-select');
+    users.forEach(user => {
+        const option = document.createElement('option');
+        option.value = user;
+        option.textContent = user;
+        userSelect.appendChild(option);
+    });
+
+}
+
+
+function localgetData(username){
+
+    const data = dummyData();
+    // items = []
+    // data.forEach(repo=>{
+    //     if (repo.username === username){
+    //         items.ap
+    //     }
+    // });
+
+    let filtered_repos = data.filter(data => data.username === username);
+    console.log("filtered_repos");
+    return filtered_repos;
+
+}
+
+
+function dummyData(){
+     
+    const data = [
+        {
+          'username': 'ravilladhaneesh',
+          'repo_url': 'https://github.com/ravilladhaneesh/ehr/tree/main',
+          'languages': {
+            'py': 40,
+            'HTML': 45,
+            'css': 15
+          }  ,
+          'branch': 'main',
+          'is_private_repo': false,
+          'repo_name': 'ehr'
+        },
+        {
+            'username': 'ravilladhaneesh',
+            'repo_url': 'https://github.com/ravilladhaneesh/OIBSIP/tree/main',
+            'languages': {
+              'py': 50,
+              'java': 20.5,
+              'ipynb': 29.5
+            }  ,
+            'branch': 'main',
+            'is_private_repo': false,
+            'repo_name': 'OIBSIP'
+          },
+          {
+            'username': 'ravilladhaneesh',
+            'repo_url': 'https://github.com/ravilladhaneesh/workflow-test/tree/feature1',
+            'languages': {
+              'py': 50.6,
+              'ipynb': 49.4
+            }  ,
+            'branch': 'feature1',
+            'is_private_repo': false,
+            'repo_name': 'workflow-test'
+          },
+          {
+            'username': 'ravilladhaneesh',
+            'repo_url': 'https://github.com/ravilladhaneesh/AI-ML',
+            'languages': {
+              'ipynb': 100
+            },
+            'branch': 'main',
+            'is_private_repo': false,
+            'repo_name': 'AI-ML'
+          },
+          {
+            'username': 'ravilladhaneesh',
+            'repo_url': 'https://github.com/ravilladhaneesh/4thProject',
+            'languages': {
+              'python' : 100,
+            },
+            'branch': 'main',
+            'is_private_repo': true,
+            'repo_name': '4thProject'
+          },
+          {
+            'username': 'gopi',
+            'repo_url': 'https://github.com/gopi/dummyrepo',
+            'languages': {
+              'python' : 60,
+              'java': 40
+            },
+            'branch': 'master',
+            'is_private_repo': true,
+            'repo_name': 'dummyrepo'
+          }
+    ];
+return data;
+}
