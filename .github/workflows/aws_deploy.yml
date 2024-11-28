@@ -6,10 +6,10 @@ on:
       - '**'
       #- master # Run the workflow when code is pushed to the main branch
       #- terraform
-  pull_request:
-    branches: 
-      - master
-      - terraform
+  # pull_request:
+  #   branches: 
+  #     - master
+  #     - terraform
       
   # workflow_dispatch:
 
