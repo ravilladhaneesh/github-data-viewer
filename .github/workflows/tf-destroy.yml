@@ -1,0 +1,33 @@
+name: terraform destroy
+
+on:
+  push:
+    branches:
+       - "**"
+
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read
+
+jobs:
+  destroy:
+    runs-on: Ubuntu-latest
+    environment: destroy-env
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.8
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN}}
+          aws-region: ap-south-1
+  
+      - name: Terraform Destroy
+        run: |
+          terraform -chdir=terraform init
+          terraform -chdir=terraform/ destroy --auto-approve
