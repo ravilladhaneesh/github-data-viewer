@@ -165,38 +165,3 @@ jobs:
         run: |
           terraform -chdir=terraform/ init
           terraform -chdir=terraform/ apply -auto-approve
-  
-  # Job to run `terraform destory`
-  destroy:
-    runs-on: ubuntu-latest
-    needs: apply  # This job depends on the successful completion of `apply`
-    environment: staging
-    # if: github.event_name == 'workflow_dispatch' && github.event.action == 'destroy'
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.9.8
-
-      # - name: Download Terraform Plan
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: terraform-plan
-
-      - name: Configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.ROLE_ARN}}
-          aws-region: ap-south-1
-
-      - name: Terraform destroy
-        run: |
-          terraform -chdir=terraform/ init
-          terraform -chdir=terraform/ destroy -auto-approve
-  
