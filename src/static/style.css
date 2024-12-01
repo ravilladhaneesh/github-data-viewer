@@ -1,3 +1,20 @@
+#header{
+    background-color: #141f2e;
+    color: white;
+    height: 4rem;
+    display: grid;
+    align-items: center;
+}
+
+.Nav-bar{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+}
+
+.github-viewer-img{
+    padding: 10px 10px 10px 10px;
+}
 
 /* Card container */
 #card-container {

@@ -1,8 +1,8 @@
 async function build() {
     document.addEventListener("DOMContentLoaded", async function () {
         // Fetch users and populate the dropdown
-        // await fetchUsers();
-        localFetchUsers();
+         await fetchUsers();
+        //localFetchUsers();
 
         const fetchReposButton = document.getElementById('fetch-repos-button');
         fetchReposButton.addEventListener('click', async function () {
@@ -16,8 +16,8 @@ async function build() {
             }
 
             // Fetch and display repositories
-            // const data = await getData(username);
-            const data = localgetData(username);
+             const data = await getData(username);
+            //const data = localgetData(username);
             if (data.length === 0) {
                 alert("No repositories found or an error occurred while fetching repositories.");
                 return;
@@ -107,7 +107,7 @@ async function build() {
 
 async function fetchUsers() {
     try {
-        const response = await fetch('https://z6p48awdd7.execute-api.ap-south-1.amazonaws.com/dev/getUsers');
+        const response = await fetch('https://7xter4ua3h.execute-api.ap-south-1.amazonaws.com/test/getUsers');
         if (!response.ok) {
             throw new Error(`Error fetching users: ${response.statusText}`);
         }
@@ -136,7 +136,7 @@ async function fetchUsers() {
 
 async function getData(username) {
     try {
-        const response = await fetch(`https://z6p48awdd7.execute-api.ap-south-1.amazonaws.com/dev/getData?username=${username}`);
+        const response = await fetch(`https://7xter4ua3h.execute-api.ap-south-1.amazonaws.com/test/getData?username=${username}`);
         if (!response.ok) {
             throw new Error(`Error fetching data: ${response.statusText}`);
         }
