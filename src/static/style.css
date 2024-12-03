@@ -1,9 +1,16 @@
+body {
+    margin-top: 0%;
+    margin-left: 0%;
+    margin-right: 0%;
+}
+
 #header{
     background-color: #141f2e;
     color: white;
     height: 4rem;
     display: grid;
     align-items: center;
+    margin-bottom: 0.5rem;
 }
 
 .Nav-bar{
@@ -14,6 +21,12 @@
 
 .github-viewer-img{
     padding: 10px 10px 10px 10px;
+}
+
+.github-viewer-img img{
+    height: 50px;
+    background-color: white;
+    border-radius: 1rem;
 }
 
 /* Card container */
