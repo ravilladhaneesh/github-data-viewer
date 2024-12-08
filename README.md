@@ -1,6 +1,6 @@
 # github-viewer
 
-github-viewer is one of the 3 github-repo-viewer project that displays the github user's repository data from Amazon AWS.
+github-data-viewer is one of the 3 github-repo-viewer project that displays the github user's repository data from Amazon AWS.
 
 1. [github-data-processor](https://github.com/ravilladhaneesh/github-scraper)
 2. [github-data-controller](https://github.com/ravilladhaneesh/github-manager)
