@@ -92,6 +92,14 @@ resource "aws_s3_object" "github-viewer-style-css" {
 }
 
 
+resource "aws_s3_object" "github-viewer-github-logo" {
+  bucket       = aws_s3_bucket.tf-github-viewer-bucket.bucket
+  key          = "images/github-transparent.png"
+  source       = "../src/static/images/github-transparent.png"
+  content_type = "image/png"
+  etag         = filemd5("../src/static/images/github-transparent.png")
+}
+
 
 # 4. Configure the bucket for static website hosting
 
