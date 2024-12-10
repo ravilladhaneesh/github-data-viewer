@@ -72,7 +72,7 @@ async function build() {
                 const borderColor = visibility === "Public" ? "green" : "red";
                 const linkContent = visibility === "Public" 
                     ? `<a href="${repo.repo_url}" target="_blank">View Repo</a>` 
-                    : `<a href="https://example.com/custom-link" target="_blank">View Custom Page</a>`;
+                    : `<a href="https://example.com/custom-link" target="_blank">View Custom Page //to-do</a>`;
 
                 card.innerHTML = `
                     <div class="card-header">
