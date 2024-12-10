@@ -1,16 +1,17 @@
-# github-viewer
+# github-data-viewer
 
 github-data-viewer is one of the 3 github-repo-viewer project that displays the github user's repository data from Amazon AWS.
 
-1. [github-data-processor](https://github.com/ravilladhaneesh/github-scraper)
-2. [github-data-controller](https://github.com/ravilladhaneesh/github-manager)
+1. [github-data-processor](https://github.com/ravilladhaneesh/github-data-processor)
+2. [github-data-controller](https://github.com/ravilladhaneesh/github-data-controller)
 3. github-data-viewer
 
 ## Table of Contents
 
-- [project flow diagram](#project-diagram)
+- [Project flow diagram](#project-diagram)
+- [Technologies used](#Technologies-Used)
 - [Prerequisites](#Prerequisites)
-- [installation](#installation)
+- [Installation](#Installation)
 - [To-do](#To-do)
 
 
@@ -19,13 +20,22 @@ github-data-viewer is one of the 3 github-repo-viewer project that displays the 
 ![project flow diagram](src/static/images/project-final-diagram.png)
 
 
+## Technologies-Used
+
+    1. Terraform
+    2. Javascript
+    3. HTML/CSS
+    4. Python
+    5. Github CI/CD
+
+
 ## Prerequisites
 
     1. Python
     2. Git
 
 
-## installation
+## Installation
 
 Steps to run application in local:
 
@@ -39,7 +49,6 @@ Steps to run application in local:
     5. Run the below command to start application in local.
         `python -m http.server 8080`
     6. Open a new tab in the browser and give `http://localhost:8080`
-
 
 
 ## To-do
