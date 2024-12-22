@@ -29,11 +29,21 @@ body {
     border-radius: 1rem;
 }
 
+
+
+#user-selection-container {
+    padding-left: 0.5rem;
+    padding-top: 0.25rem;
+}
+
+
+
 /* Card container */
 #card-container {
-display: flex;
-flex-wrap: wrap;
-gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 1% 2% 1% 2%;
 }
 
 /* Card styling */

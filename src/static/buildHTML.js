@@ -1,7 +1,7 @@
 async function build() {
     document.addEventListener("DOMContentLoaded", async function () {
         // Fetch users and populate the dropdown
-         await fetchUsers();
+        await fetchUsers();
         //localFetchUsers();
 
         const fetchReposButton = document.getElementById('fetch-repos-button');
@@ -16,7 +16,7 @@ async function build() {
             }
 
             // Fetch and display repositories
-             const data = await getData(username);
+            const data = await getData(username);
             //const data = localgetData(username);
             if (data.length === 0) {
                 alert("No repositories found or an error occurred while fetching repositories.");
@@ -40,26 +40,34 @@ async function build() {
 
             data.forEach(repo => {
                 console.log(repo);
-                const card = document.createElement('div');
+                const card = document.createElement('a'); 
                 card.classList.add('card');
-
+                card.target = '_blank';
+                card.style.textDecoration = 'none';
+                card.style.color = 'inherit';
+            
                 const totalFiles = Object.values(repo.languages).reduce((acc, count) => acc + count, 0);
-
+            
                 let progressBarContent = '';
                 let languageSpanContent = '';
-                Object.entries(repo.languages).forEach(([lang, percentage]) => {
+            
+                const sortedLanguagesEntries = Object.entries(repo.languages).sort(([, valueA], [, valueB]) => valueB - valueA);
+            
+                const sortedLanguagesObj = Object.fromEntries(sortedLanguagesEntries);
+            
+                Object.entries(sortedLanguagesObj).forEach(([lang, percentage]) => {
                     if (!languageColors[lang]) {
                         languageColors[lang] = getRandomColor();
                     }
                     const color = languageColors[lang];
-
+            
                     progressBarContent += `
                         <div class="progress-bar-segment" 
                              style="width: ${percentage}%; background-color: ${color};"
                              title="${lang}: ${percentage}%">
                         </div>
                     `;
-
+            
                     languageSpanContent += `
                         <li style="color: ${color};">
                             <span class="language-name">${lang}</span>
@@ -67,13 +75,12 @@ async function build() {
                         </li>
                     `;
                 });
-
+            
                 const visibility = repo.is_private_repo ? "Private" : "Public";
                 const borderColor = visibility === "Public" ? "green" : "red";
-                const linkContent = visibility === "Public" 
+                const linkContent = visibility === "Public"
                     ? `<a href="${repo.repo_url}" target="_blank">View Repo</a>` 
                     : `<a href="https://example.com/custom-link" target="_blank">View Custom Page //to-do</a>`;
-
                 card.innerHTML = `
                     <div class="card-header">
                         <div class='card-repo-name'>
@@ -97,7 +104,7 @@ async function build() {
                     </ul>
                     ${linkContent}
                 `;
-
+                card.href = visibility === "Public" ? repo.repo_url: "https://example.com/custom-link";
                 container.appendChild(card);
             });
         });
