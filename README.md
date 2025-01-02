@@ -48,7 +48,7 @@ between data retrieval, storage, and visualization, providing an efficient and u
 Steps to run application in local:
 
     1. Clone the repository using the below command in git bash(or command prompt).
-        `git clone https://github.com/ravilladhaneesh/github-viewer.git`
+        `git clone https://github.com/ravilladhaneesh/github-data-viewer.git`
     2. Move to the cloned repository directory
     3. Run the below command in git bash to install required python dependencies.
         `pip install -r requirements.txt`
