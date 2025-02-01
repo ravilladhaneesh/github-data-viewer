@@ -61,8 +61,7 @@ Steps to run application in local:
 
 ## To-do
 
-1. Add the project source code link in Nav-bar.
-2. Add functionality to request access for private repository.
+1. Add functionality to request access for private repository.
 
 
 
