@@ -114,7 +114,7 @@ async function build() {
 
 async function fetchUsers() {
     try {
-        const response = await fetch('https://7xter4ua3h.execute-api.ap-south-1.amazonaws.com/test/getUsers');
+        const response = await fetch('https://09p14088yf.execute-api.ap-south-1.amazonaws.com/test/getUsers');
         if (!response.ok) {
             throw new Error(`Error fetching users: ${response.statusText}`);
         }
@@ -143,7 +143,7 @@ async function fetchUsers() {
 
 async function getData(username) {
     try {
-        const response = await fetch(`https://7xter4ua3h.execute-api.ap-south-1.amazonaws.com/test/getData?username=${username}`);
+        const response = await fetch(`https://09p14088yf.execute-api.ap-south-1.amazonaws.com/test/getData?username=${username}`);
         if (!response.ok) {
             throw new Error(`Error fetching data: ${response.statusText}`);
         }
