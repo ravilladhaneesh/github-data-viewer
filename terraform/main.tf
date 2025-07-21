@@ -2,7 +2,7 @@
 # 1. Create an s3 bucket
 
 resource "aws_s3_bucket" "tf-github-viewer-bucket" {
-  bucket = "github-viewer"
+  bucket = "github-repo-viewer"
 
   tags = {
     Name        = "terraform github-viewer bucket"
