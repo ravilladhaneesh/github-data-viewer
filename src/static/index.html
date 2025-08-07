@@ -1,57 +1,99 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REPO MANAGER</title>
+    <title>GitHub Repo Manager</title>
     <link rel="stylesheet" href="style.css">
-    
 </head>
+
 <body>
-    <script type="text/javascript" src="buildHTML.js"></script>
-    <!-- <script>buildHeader();</script> -->
-    <div id="header" >
+    <!-- HEADER -->
+    <div id="header">
         <div class="Nav-bar">
             <div class="github-viewer-img">
-                <a href="https://github.com/ravilladhaneesh/github-data-controller" target="_blank"> 
-                    <img src="images/github-transparent.png" alt="github-image">
-                </a>
-                
-            </div>
-            <div class="github-viewer">
-                GITHUB-REPO-MANAGER
-            </div>
-
-            <div class="source-link">
                 <a href="https://github.com/ravilladhaneesh/github-data-controller" target="_blank">
-                    Link to Source Code/READ ME
+                    <img src="images/github-transparent.png" alt="github-logo">
                 </a>
             </div>
-
+            <div class="github-viewer">GITHUB REPO MANAGER</div>
+            <div class="source-link">
+                <a href="https://github.com/ravilladhaneesh/github-data-controller" target="_blank">Source Code /
+                    README</a>
+            </div>
         </div>
     </div>
 
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <h1>Explore GitHub Repository Insights</h1>
+        <p style="max-width: 700px; margin: 0 auto 1rem auto; font-size: 1.05rem; color: #444;">
+            Managing GitHub repositories can be overwhelming, especially with inactive or archived projects cluttering your profile.
+        </p>
+        <p style="max-width: 700px; margin: 0 auto 1.5rem auto; font-size: 1.05rem; color: #444;">
+            Host and showcase your most important GitHub repositories — generate a shareable link you can send to recruiters, collaborators, or HR professionals to highlight your project contributions.
+        </p>
+        <div class="search-box">
+            <input type="text" id="username-input" placeholder="Enter GitHub username" />
+            <button id="search-button">Search</button>
+            <button id="copy-link-button">Copy Shareable Link</button>
+            <span id="copy-status" class="copy-status"></span>
+        </div>
 
+        <div class="collapsible-box">
+            <button class="collapsible-button" onclick="toggleInstructions()">📤 How to Host Your Repo</button>
+            <div class="collapsible-content" id="instructions">
+                <ul style="list-style-type: none;">
+                    <li>Go to your GitHub repo's <strong>Settings</strong> → <strong>Environments</strong>.</li>
+                    <li>Create a new environment and name it <strong>"staging"</strong>.</li>
+                    <li>Create a <code>.github/workflows</code> folder and add the workflow file provided
+                        <a href="https://github.com/ravilladhaneesh/workflow-test/blob/main/.github/workflows/publish-repo-data.yml"
+                            target="_blank">(file)</a>.
+                    </li>
+                    <li><i>Learn how it works by clicking the README file located at the top-right of the nav bar</i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
-    <!-- Dropdown for available users -->
-    <div id="user-selection-container">
-        <label for="user-select">Select a User:</label>
-        <select id="user-select">
-            <option value="">-- Select a User --</option>
-        </select>
-        <button id="fetch-repos-button">Fetch Repositories</button>
-    </div>
-
-
-
-    <script>build();</script>
+    <!-- CARD CONTAINER -->
     <div id="card-container"></div>
-    <!-- <div>
-        <ul>
-            <li>dhaneesh</li>
-            <li>ravilla</li>
-        </ul>
-    </div> -->
+
+    <!-- FOOTER -->
     <div id="footer"></div>
+
+    <!-- SCRIPT -->
+    <script type="text/javascript" src="buildHTML.js"></script>
+    <script>
+        build();
+        
+        document.getElementById('copy-link-button').addEventListener('click', () => {
+            const username = document.getElementById('username-input').value.trim();
+            const copyStatus = document.getElementById('copy-status');
+
+            if (!username) {
+                copyStatus.textContent = "";
+                return;
+            }
+
+            const url = `${window.location.origin}${window.location.pathname}?username=${encodeURIComponent(username)}`;
+            navigator.clipboard.writeText(url).then(() => {
+                copyStatus.textContent = "Copied!";
+                copyStatus.classList.add("visible");
+
+                setTimeout(() => {
+                    copyStatus.classList.remove("visible");
+                    copyStatus.textContent = "";
+                }, 2000);
+            }).catch(err => {
+                console.error("Failed to copy link: ", err);
+            });
+        });
+
+    </script>
 </body>
+
 </html>
