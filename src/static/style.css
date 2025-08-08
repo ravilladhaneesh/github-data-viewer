@@ -246,3 +246,13 @@ body {
   margin: 8px 0;
   background-color: #e0e0e0;
 }
+
+#workflow-file-link {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.workflow-file-link {
+    color: #007BFF;
+    text-decoration: none;
+}
