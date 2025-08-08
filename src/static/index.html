@@ -33,8 +33,8 @@
             Managing GitHub repositories can be overwhelming, especially with inactive or archived projects cluttering your profile.
         </p>
         <p style="max-width: 700px; margin: 0 auto 1.5rem auto; font-size: 1.05rem; color: #444;">
-            Host and showcase your most important GitHub repositories — generate a shareable link you can send to recruiters, collaborators, or HR professionals to highlight your project contributions.
-        </p>
+            Host and showcase your most important GitHub repositories in one step — just add a  <a id="workflow-file-link" href="https://github.com/ravilladhaneesh/workflow-test/blob/main/.github/workflows/publish-repo.yml"
+                            target="_blank">file</a>, then share a personalized link with recruiters, collaborators, or hiring managers.</p>
         <div class="search-box">
             <input type="text" id="username-input" placeholder="Enter GitHub username" />
             <button id="search-button">Search</button>
@@ -46,11 +46,11 @@
             <button class="collapsible-button" onclick="toggleInstructions()">📤 How to Host Your Repo</button>
             <div class="collapsible-content" id="instructions">
                 <ul style="list-style-type: none;">
-                    <li>Go to your GitHub repo's <strong>Settings</strong> → <strong>Environments</strong>.</li>
-                    <li>Create a new environment and name it <strong>"staging"</strong>.</li>
+                    <!-- <li>Go to your GitHub repo's <strong>Settings</strong> → <strong>Environments</strong>.</li>
+                    <li>Create a new environment and name it <strong>"staging"</strong>.</li> -->
                     <li>Create a <code>.github/workflows</code> folder and add the workflow file provided
-                        <a href="https://github.com/ravilladhaneesh/workflow-test/blob/main/.github/workflows/publish-repo-data.yml"
-                            target="_blank">(file)</a>.
+                        <a class="workflow-file-link" href="https://github.com/ravilladhaneesh/workflow-test/blob/main/.github/workflows/publish-repo.yml"
+                            target="_blank">(file)</a> to your repository.</li>
                     </li>
                     <li><i>Learn how it works by clicking the README file located at the top-right of the nav bar</i>
                     </li>
