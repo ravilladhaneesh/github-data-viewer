@@ -53,7 +53,7 @@ async function fetchAndRenderRepos(username) {
     container.innerHTML = "";
 
     if (!data || data.length === 0) {
-        container.innerHTML = "<p style='text-align:center;'>No repositories found for this user.</p>";
+        container.innerHTML = `<p style='text-align:center;'>No repositories found for the username ${username}</p>`;
         return;
     }
 
